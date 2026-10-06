@@ -1,0 +1,5 @@
+# Core application uses Python Standard Library (0 external dependencies required!)
+# Optional dependencies if you wish to run with Flask or FastAPI:
+# flask>=3.0.0
+# fastapi>=0.110.0
+# uvicorn>=0.28.0

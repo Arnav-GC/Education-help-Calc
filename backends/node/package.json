@@ -1,0 +1,12 @@
+{
+  "name": "educalc-node-backend",
+  "version": "2.0.0",
+  "description": "Node.js REST backend for EduCalc Pro",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["marks-calculator", "nodejs", "rest-api"],
+  "author": "Arnav",
+  "license": "MIT"
+}

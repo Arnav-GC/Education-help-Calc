@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduCalc Pro - Student Marks & Grade Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon">📊</div>
+        <div>
+          <h1>EduCalc Pro</h1>
+          <p class="tagline">Enterprise-Grade Student Marks, Percentage & Grade Calculator</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-python">Python 3</span>
+        <span class="badge badge-js">JavaScript</span>
+        <span class="badge badge-java">Java</span>
+        <span class="badge badge-status" id="apiStatusBadge">● API Ready</span>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="main-content">
+      <!-- Input Section -->
+      <section class="card input-card" aria-labelledby="input-heading">
+        <div class="card-header">
+          <h2 id="input-heading">Student & Examination Details</h2>
+          <div class="engine-toggle-group">
+            <label for="engineSelect" class="engine-label">Engine:</label>
+            <select id="engineSelect" class="styled-select">
+              <option value="client">Client-Side (Instant JS)</option>
+              <option value="api">Python Backend API</option>
+            </select>
+          </div>
+        </div>
+
+        <form id="marksForm" onsubmit="return false;">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="studentName">Student Name</label>
+              <input type="text" id="studentName" placeholder="e.g. John Doe" value="Arnav" required>
+            </div>
+            <div class="form-group flex-1">
+              <label for="passThreshold">Passing Mark (%)</label>
+              <input type="number" id="passThreshold" min="1" max="100" value="35" required>
+            </div>
+          </div>
+
+          <!-- Configuration Controls -->
+          <div class="config-bar">
+            <div class="toggle-control">
+              <span class="toggle-label">Uniform Total Marks for all subjects?</span>
+              <div class="radio-pills">
+                <label class="radio-pill active" id="pillUniformYes">
+                  <input type="radio" name="uniformMode" value="yes" checked> Yes
+                </label>
+                <label class="radio-pill" id="pillUniformNo">
+                  <input type="radio" name="uniformMode" value="no"> No (Custom per subject)
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group uniform-total-group" id="uniformTotalContainer">
+              <label for="uniformMax">Max Marks per Subject</label>
+              <input type="number" id="uniformMax" min="1" max="1000" value="100">
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="presets-bar">
+            <span class="presets-label">Quick Presets:</span>
+            <button type="button" class="btn-preset" data-preset="standard">Standard 5 Subjects</button>
+            <button type="button" class="btn-preset" data-preset="original">Base Script (8 Subjects)</button>
+            <button type="button" class="btn-preset" data-preset="stem">STEM (Physics/Chem/Math)</button>
+            <button type="button" class="btn-preset btn-preset-clear" id="btnClearAll">Clear All</button>
+          </div>
+
+          <!-- Dynamic Subjects Table -->
+          <div class="table-responsive">
+            <table class="subjects-table" id="subjectsTable">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>Subject Name</th>
+                  <th style="width: 140px;">Marks Obtained</th>
+                  <th style="width: 140px;">Max Marks</th>
+                  <th style="width: 110px;">Percentage</th>
+                  <th style="width: 60px;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="subjectsBody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Row Controls & Actions -->
+          <div class="form-actions-bar">
+            <button type="button" class="btn btn-secondary" id="btnAddSubject">
+              <span>+ Add Subject</span>
+            </button>
+            <div class="action-buttons-group">
+              <button type="button" class="btn btn-outline" id="btnResetForm">Reset</button>
+              <button type="button" class="btn btn-primary" id="btnCalculate">
+                <span>Calculate Results</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results Section -->
+      <section class="card results-card" id="resultsSection" style="display: none;" aria-labelledby="results-heading">
+        <div class="card-header results-header">
+          <div>
+            <h2 id="results-heading">Official Scorecard & Grade Breakdown</h2>
+            <p class="student-subtitle" id="resultStudentSubtitle">Student: Arnav</p>
+          </div>
+          <div class="export-actions no-print">
+            <button type="button" class="btn-tool" id="btnPrint" title="Print or Save PDF">🖨️ Print / PDF</button>
+            <button type="button" class="btn-tool" id="btnExportCSV" title="Download CSV">📥 CSV</button>
+            <button type="button" class="btn-tool" id="btnExportJSON" title="Download JSON">💾 JSON</button>
+          </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Total Marks</span>
+            <div class="metric-value" id="resTotalMarks">0 / 0</div>
+            <span class="metric-hint" id="resTotalRatio">0% aggregate</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-label">Percentage</span>
+            <div class="metric-value highlight" id="resPercentage">0.00%</div>
+            <span class="metric-hint" id="resGrade">Grade: N/A</span>
+          </div>
+
+          <div class="metric-card" id="cardOverallStatus">
+            <span class="metric-label">Overall Status</span>
+            <div class="metric-value status-pill" id="resStatusBadge">PASSED</div>
+            <span class="metric-hint" id="resStatusDetail">Passed in average</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-label">Highest Score</span>
+            <div class="metric-value" id="resHighest">None</div>
+            <span class="metric-hint" id="resHighestScore">-</span>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-label">Lowest Score</span>
+            <div class="metric-value" id="resLowest">None</div>
+            <span class="metric-hint" id="resLowestScore">-</span>
+          </div>
+        </div>
+
+        <!-- Breakdown Table -->
+        <div class="table-responsive breakdown-container">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Marks Obtained</th>
+                <th>Max Marks</th>
+                <th>Percentage</th>
+                <th>Visual Progress</th>
+                <th>Subject Status</th>
+              </tr>
+            </thead>
+            <tbody id="reportTableBody">
+              <!-- Dynamically populated report items -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Report Footer Notice -->
+        <div class="report-footer">
+          <div class="report-signature">
+            <p>Generated by EduCalc Pro Engine</p>
+            <span class="timestamp" id="reportTimestamp"></span>
+          </div>
+          <div class="passing-rule-note" id="passingRuleNote">
+            * Passing criteria: Minimum 35.0% required per subject and in aggregate average.
+          </div>
+        </div>
+      </section>
+
+      <!-- History Section -->
+      <section class="card history-card no-print" id="historyCard">
+        <div class="card-header">
+          <h3>Recent Calculations History</h3>
+          <button type="button" class="btn-text-danger" id="btnClearHistory">Clear History</button>
+        </div>
+        <div id="historyListContainer" class="history-list">
+          <p class="empty-state">No recent calculations stored yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer no-print">
+      <p>EduCalc Pro • Multi-Language Implementation Showcase</p>
+      <div class="footer-links">
+        <span>Languages: <strong>Python</strong> • <strong>Java</strong> • <strong>JavaScript</strong> • <strong>HTML5</strong> • <strong>CSS3</strong> • <strong>Go</strong></span>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toastNotification" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
