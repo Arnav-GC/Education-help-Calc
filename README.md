@@ -12,6 +12,10 @@ An enterprise-grade, multi-language Student Grade & Marks Calculator built with 
 [![Go](https://img.shields.io/badge/Go-1.20+-00ADD8.svg?logo=go&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+<br/>
+
+### 🌐 [Click Here to Open Live Calculator in Browser](https://arnav-gc.github.io/Ai-Projects/)
+
 </div>
 
 ---
