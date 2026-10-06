@@ -14,7 +14,7 @@ An enterprise-grade, multi-language Student Grade & Marks Calculator built with 
 
 <br/>
 
-### 🌐 [Click Here to Open Live Calculator in Browser](https://arnav-gc.github.io/Ai-Projects/)
+### 🌐 [Click Here to Open Live Calculator in Browser](https://arnav-gc.github.io/Education-help-Calc/)
 
 </div>
 
