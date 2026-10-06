@@ -234,12 +234,20 @@ document.addEventListener('DOMContentLoaded', () => {
     createSubjectRow('', '', isUniformMode ? (uniformMaxInput.value || 100) : 100);
   });
 
+  function initializeEmptyRows(count = 5) {
+    subjectsBody.innerHTML = '';
+    const currentMax = isUniformMode ? (parseFloat(uniformMaxInput.value) || 100) : 100;
+    for (let i = 0; i < count; i++) {
+      createSubjectRow('', '', currentMax);
+    }
+  }
+
   btnResetForm.addEventListener('click', () => {
     studentNameInput.value = '';
     passThresholdInput.value = '35';
-    loadPreset('standard');
+    initializeEmptyRows(5);
     resultsSection.style.display = 'none';
-    showToast('Form reset to default.');
+    showToast('Form reset to blank.');
   });
 
   // Calculate Logic
@@ -554,7 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Initialize
-  loadPreset('standard');
+  initializeEmptyRows(5);
   renderHistory();
   checkBackendStatus();
 });
